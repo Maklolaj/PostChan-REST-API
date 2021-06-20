@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using PostChan.Domain;
 using Microsoft.AspNetCore.Mvc;
-using PostChan.Contracts;
+using PostChan.Contracts.V1;
 
-namespace PostChan.Controllers
+namespace PostChan.Controllers.V1
 {
     public class PostsController : Controller
     {
