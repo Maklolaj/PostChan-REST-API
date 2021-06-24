@@ -54,5 +54,34 @@ namespace PostChan.Controllers.V1
 
             return Created(locationUrl, response);
         }
+
+        [HttpDelete(ApiRoutes.Posts.Delete)]
+        public IActionResult Delete([FromRoute]Guid postId)
+        {
+            var deleted = _postService.DeletePost(postId);
+
+            if (deleted)
+                return NoContent();
+
+            return NotFound();
+        }
+
+        [HttpPut(ApiRoutes.Posts.Update)]
+        public IActionResult Update([FromBody] UpdatePostRequest request, [FromRoute] Guid postId)
+        {
+            var post = new Post
+            {
+                Id = postId,
+                Name = request.Name
+            };
+            
+            if (_postService.UpdatePost(post))
+                return Ok(post);
+
+            return NotFound();
+
+
+        }
+
     }
 }

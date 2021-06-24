@@ -24,6 +24,17 @@ namespace PostChan.Services
                 });
             }
         }
+
+        public bool DeletePost(Guid postId)
+        {
+            if (GetPostById(postId) == null)
+                return false;
+
+            var index = _posts.FindIndex(x => x.Id == postId);
+            _posts.RemoveAt(index);
+            return true;
+        }
+
         public Post GetPostById(Guid postId)
         {
             return _posts.SingleOrDefault(x => x.Id == postId);
@@ -32,6 +43,17 @@ namespace PostChan.Services
         public List<Post> GetPosts()
         {
             return _posts;
+        }
+
+        public bool UpdatePost(Post postToUpdate)
+        {
+            if (GetPostById(postToUpdate.Id) == null)
+                return false;
+
+            var index = _posts.FindIndex(x => x.Id == postToUpdate.Id);
+            _posts[index] = postToUpdate;
+
+            return true;
         }
     }
 }

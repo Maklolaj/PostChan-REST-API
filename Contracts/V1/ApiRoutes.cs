@@ -20,6 +20,10 @@ namespace PostChan.Contracts.V1
             public const string Create = Base + "/" + "posts";
 
             public const string Get = Base + "/" + "posts/{postId}";
+
+            public const string Update = Base + "/" + "posts/{postId}";
+
+            public const string Delete = Base + "/" + "posts/{postId}";
         }
     }
 
