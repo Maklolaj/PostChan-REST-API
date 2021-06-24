@@ -24,7 +24,7 @@ namespace PostChan.Installers
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
-            services.AddSingleton<IPostService, PostService>();
+            services.AddScoped<IPostService, PostService>();
         }
     }
 }
