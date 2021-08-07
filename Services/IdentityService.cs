@@ -86,7 +86,7 @@ namespace PostChan.Services
         }
 
 
-        private AuthenticationResult GenerateAuthenticationResultForUser(IdentityUser newUser)
+        private AuthenticationResult GenerateAuthenticationResultForUser(IdentityUser user)
         {
             ASCIIEncoding ascii = new ASCIIEncoding();
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -96,10 +96,10 @@ namespace PostChan.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, newUser.Email),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, newUser.Email),
-                    new Claim("id", newUser.Id)  //Custom claim
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim("id", user.Id)  //Custom claim
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
