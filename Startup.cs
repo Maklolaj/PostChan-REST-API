@@ -42,7 +42,7 @@ namespace PostChan
             //Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
             if (env.IsDevelopment())
             {
-               app.UseAuthentication();
+
                app.UseDeveloperExceptionPage();
                app.UseSwagger();
                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PostChan v1"));
@@ -53,16 +53,12 @@ namespace PostChan
                 app.UseHsts();
             }
 
-            
-            
-
-            
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseAuthentication();
             app.UseRouting();
-
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

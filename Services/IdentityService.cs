@@ -10,6 +10,7 @@ using PostChan.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
+
 namespace PostChan.Services
 {
     public class IdentityService : IIdentityService
@@ -24,12 +25,39 @@ namespace PostChan.Services
             _jwtSettigns = jwtSettigns;
         }
 
-        public async Task<AuthenticationResult> RegisterAsync(string email, string password)
+        public async Task<AuthenticationResult> LoginAsync(string email, string password)
         {
 
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "User does not exist" }
+                };
+            }
+
+            var userHasValidPassword = await _userManager.CheckPasswordAsync(user, password);
+
+            if (!userHasValidPassword)
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "login/password combiantion is invalid" }
+                };
+            }
+
+            return GenerateAuthenticationResultForUser(user);
+
+        }
+
+
+        public async Task<AuthenticationResult> RegisterAsync(string email, string password)
+        {
             var existtingUser = await _userManager.FindByEmailAsync(email);
 
-            if(existtingUser != null)
+            if (existtingUser != null)
             {
                 return new AuthenticationResult
                 {
@@ -53,6 +81,13 @@ namespace PostChan.Services
                 };
             }
 
+            return GenerateAuthenticationResultForUser(newUser);
+
+        }
+
+
+        private AuthenticationResult GenerateAuthenticationResultForUser(IdentityUser newUser)
+        {
             ASCIIEncoding ascii = new ASCIIEncoding();
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = ascii.GetBytes(_jwtSettigns.Secret);
@@ -64,7 +99,7 @@ namespace PostChan.Services
                     new Claim(JwtRegisteredClaimNames.Sub, newUser.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, newUser.Email),
-                    new Claim("id", newUser.Id)
+                    new Claim("id", newUser.Id)  //Custom claim
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -77,8 +112,6 @@ namespace PostChan.Services
                 Succes = true,
                 Token = tokenHandler.WriteToken(token)
             };
-
-
         }
     }
 }

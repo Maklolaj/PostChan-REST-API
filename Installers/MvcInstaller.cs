@@ -40,7 +40,9 @@ namespace PostChan.Installers
                         IssuerSigningKey = new SymmetricSecurityKey(ascii.GetBytes(jwtSettings.Secret)),
                         ValidateIssuer = false,
                         ValidateAudience = false,
-                        ValidateLifetime = true
+                        RequireExpirationTime = false,
+                        ValidateLifetime = true,
+                        
                     };
                 });
 
