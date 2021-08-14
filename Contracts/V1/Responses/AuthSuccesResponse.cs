@@ -9,5 +9,6 @@ namespace PostChan.Contracts.V1.Responses
     {
         public string Token { get; set; }
 
+        public string RefreshToken { get; set; }
     }
 }
